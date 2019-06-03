@@ -2,7 +2,7 @@ package wafkit
 
 type trieNode struct {
 	children map[rune]*trieNode
-	value string
+	value    string
 }
 
 func (n *trieNode) Contains(key string) bool {
@@ -10,10 +10,10 @@ func (n *trieNode) Contains(key string) bool {
 	for _, r := range key {
 		if current.value == key {
 			return true
-		}else if child, ok := current.children[r]; ok {
+		} else if child, ok := current.children[r]; ok {
 			current = child
 		} else {
-			return false
+			break
 		}
 	}
 	return false
@@ -28,7 +28,7 @@ func (n *trieNode) Insert(key string) {
 		if child, ok := current.children[r]; ok {
 			current = child
 		} else {
-			current.children[r] = &trieNode{value:key}
+			current.children[r] = &trieNode{value: key}
 		}
 	}
 }

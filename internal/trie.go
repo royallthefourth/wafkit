@@ -1,11 +1,11 @@
 package wafkit
 
-type trieNode struct {
-	children map[rune]*trieNode
+type TrieNode struct {
+	children map[rune]*TrieNode
 	value    string
 }
 
-func (n *trieNode) Contains(key string) bool {
+func (n *TrieNode) Contains(key string) bool {
 	current := n
 	for _, r := range key {
 		if current.value == key {
@@ -19,16 +19,16 @@ func (n *trieNode) Contains(key string) bool {
 	return false
 }
 
-func (n *trieNode) Insert(key string) {
+func (n *TrieNode) Insert(key string) {
 	current := n
 	for _, r := range key {
 		if current.children == nil {
-			current.children = map[rune]*trieNode{}
+			current.children = map[rune]*TrieNode{}
 		}
 		if child, ok := current.children[r]; ok {
 			current = child
 		} else {
-			current.children[r] = &trieNode{value: key}
+			current.children[r] = &TrieNode{value: key}
 		}
 	}
 }

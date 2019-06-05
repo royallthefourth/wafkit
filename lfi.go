@@ -16,8 +16,9 @@ func (e ErrPathTraversal) Error() string {
 	return e.Value
 }
 
-// See https://github.com/SpiderLabs/owasp-modsecurity-crs/blob/v3.2/dev/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf
-func PathTraversal(_ http.ResponseWriter, r *http.Request) error {
+// PathTraversal filters path traversal attempts.
+// See https://github.com/SpiderLabs/owasp-modsecurity-crs/blob/v3.2/dev/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf#L30
+func PathTraversal(r *http.Request) error {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return err
@@ -29,13 +30,13 @@ func PathTraversal(_ http.ResponseWriter, r *http.Request) error {
 		return ErrPathTraversal{Value: `Detected path traversal`}
 	}
 
-	for header, vals := range r.Header{
-		if detectPathTraversal(header){
+	for header, vals := range r.Header {
+		if detectPathTraversal(header) {
 			return ErrPathTraversal{Value: `Detected path traversal`}
 		}
 		if header != `Referrer` {
 			for _, val := range vals {
-				if detectPathTraversal(val){
+				if detectPathTraversal(val) {
 					return ErrPathTraversal{Value: `Detected path traversal`}
 				}
 			}
@@ -57,4 +58,13 @@ func detectPathTraversal(input string) bool {
 	return pathTraversalExp.MatchString(input) || // encoded traversal attempts
 		strings.Contains(input, `..\`) || // plaintext traversal attempts
 		strings.Contains(input, `../`)
+}
+
+func OsFiles(r *http.Request) error {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+	return nil
 }

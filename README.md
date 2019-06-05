@@ -4,3 +4,4 @@
 [![codecov](https://codecov.io/gh/royallthefourth/wafkit/branch/master/graph/badge.svg)](https://codecov.io/gh/royallthefourth/wafkit)
 
 `wafkit` is a library to help you either build a custom web application firewall or add some protection to an existing Go application.
+Currently, I'm attempting to implement all of the stateless rules from [modsecurity](https://www.modsecurity.org/CRS/Documentation/rules.html).

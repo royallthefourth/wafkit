@@ -6,7 +6,7 @@ func TestTrieNode(t *testing.T) {
 	present := []string{`dog`, `daffodil`}
 	notPresent := []string{`do`, `asdf`}
 
-	trie := trieNode{}
+	trie := TrieNode{}
 	for _, word := range present {
 		trie.Insert(word)
 	}

@@ -15,10 +15,27 @@ func TestPathTraversalClean(t *testing.T) {
 	}
 }
 
-func TestPathTraversalCleanHeader(t *testing.T) {
+func TestPathTraversalDirtyHeader(t *testing.T) {
 	r := httptest.NewRequest(http.MethodGet, `http://example.com/asdf`, strings.NewReader(``))
 	r.Header.Add(`Accept`, `../files`)
 	err := PathTraversal(r)
+	if err == nil {
+		t.Error(`Expected error`)
+	}
+}
+
+func TestOsFileIncludeClean(t *testing.T) {
+	r := httptest.NewRequest(http.MethodGet, `http://example.com/asdf`, strings.NewReader(``))
+	err := OsFileInclude(r)
+	if err != nil {
+		t.Error(`Expected no error`)
+	}
+}
+
+func TestOsFileIncludeDirtyHeader(t *testing.T) {
+	r := httptest.NewRequest(http.MethodGet, `http://example.com/asdf`, strings.NewReader(``))
+	r.Header.Add(`Accept`, `php5/php.ini`)
+	err := OsFileInclude(r)
 	if err == nil {
 		t.Error(`Expected error`)
 	}
